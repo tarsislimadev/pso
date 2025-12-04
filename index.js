@@ -51,8 +51,3 @@ spheres.map((s, ix) => {
   s.position.x = (ix % 10) - diff
   s.position.z = Math.floor(ix / 10) - diff
 })
-
-setTimeout(() => {
-  console.log('plane', plane.position)
-  spheres.map((s, i) => console.log('sphere ' + i, s.position))
-}, 1000)
