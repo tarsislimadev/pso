@@ -1,11 +1,10 @@
 import * as THREE from 'three'
-import * as dat from 'https://cdn.jsdelivr.net/npm/dat.gui@0.7.9/+esm'
-
-const gui = new dat.GUI()
 
 const getWidth = () => window.innerWidth
 const getHeight = () => window.innerHeight
 const getAspect = () => getWidth() / getHeight()
+
+const getPlaneWidth = () => 10
 
 const scene = new THREE.Scene()
 
@@ -26,10 +25,11 @@ animate()
 
 //
 
-const geometry = new THREE.PlaneGeometry(10, 10)
-const material = new THREE.MeshBasicMaterial({ color: 0x0099ff, side: THREE.DoubleSide })
-const plane = new THREE.Mesh(geometry, material)
-plane.rotation.x = Math.PI / 2
+const plane = new THREE.Mesh(
+  new THREE.PlaneGeometry(getPlaneWidth(), getPlaneWidth()),
+  new THREE.MeshBasicMaterial({ color: 0xffffff }),
+)
+plane.rotation.x = -Math.PI / 2
 plane.rotation.z = Math.PI / 2
 scene.add(plane)
 
@@ -37,3 +37,22 @@ camera.position.y = 7.5
 camera.position.z = 7.5
 
 camera.rotation.x = -Math.PI * 0.25
+
+const spheres = Array.from(Array(40)).map(() => {
+  const geometry = new THREE.SphereGeometry(0.1, 32, 16)
+  const material = new THREE.MeshBasicMaterial({ color: 0x0066ff })
+  const sphere = new THREE.Mesh(geometry, material)
+  scene.add(sphere)
+  return sphere
+})
+
+spheres.map((s, ix) => {
+  const diff = Math.floor(getPlaneWidth() / 2) - 0.5
+  s.position.x = (ix % 10) - diff
+  s.position.z = Math.floor(ix / 10) - diff
+})
+
+setTimeout(() => {
+  console.log('plane', plane.position)
+  spheres.map((s, i) => console.log('sphere ' + i, s.position))
+}, 1000)
